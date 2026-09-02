@@ -1,0 +1,10 @@
+{
+  "event_id": 468,
+  "poll_interval": 1.5,
+  "pair_gap": 2,
+  "auto_book": true,
+  "max_sessions_to_create": 5,
+  "session_dir": "sessions",
+  "results_dir": "results",
+  "headless": true
+}
