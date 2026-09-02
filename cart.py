@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent
 async def main():
     if len(sys.argv) != 2:
         print("Usage :")
-        print("  python cart.py results/session_001_1788390217.json")
+        print("  python cart.py results/session_001_1788391422.json")
         return
 
     target_path = Path(sys.argv[1])
@@ -53,24 +53,29 @@ async def main():
         print(f"Places : Rang {p['row']} | Sièges {p['seat1']['seat']} & {p['seat2']['seat']}")
     print("=" * 65)
 
-    # Injection du token dans TOUS les headers HTTP envoyés par le navigateur
-    headers = {
-        "a360session": f"Bearer {token}"
-    } if token else {}
-
+    # ATTENTION : Ne JAMAIS mettre extra_http_headers sur new_context() !
+    # Cela envoie le header a360session aux CDNs tiers (Stripe, OneTrust, Google),
+    # ce qui déclenche des erreurs CORS et bloque le chargement (spinner rouge infini).
     async with AsyncCamoufox(
         headless=False,
         proxy=proxy_cfg,
         geoip=True
     ) as browser:
         context = await browser.new_context(
-            storage_state=session["storage_state"],
-            extra_http_headers=headers
+            storage_state=session["storage_state"]
         )
         page = await context.new_page()
 
-        # INJECTION COMPLÈTE : sessionStorage + localStorage + headers
-        # Le framework de Séville lit son token dans sessionStorage.getItem("a360_se_cart_token").
+        # On attache a360session UNIQUEMENT sur les appels internes /api/** du club
+        if token:
+            async def on_api_route(route):
+                h = dict(route.request.headers)
+                h["a360session"] = f"Bearer {token}"
+                await route.continue_(headers=h)
+
+            await page.route("**/api/**", on_api_route)
+
+        # Injection complète du sessionStorage et localStorage
         saved_session_storage = file_data.get("session_storage", {})
         saved_local_storage = file_data.get("local_storage", {})
 
@@ -90,31 +95,54 @@ async def main():
                     localStorage.setItem("a360_se_cart_token", "{token}");
                     localStorage.setItem("a360session", "{token}");
                 }}
-                console.log("[INJECTION OK] Storage et token panier restaurés.");
+                console.log("[INJECTION OK] Token panier restauré dans sessionStorage.");
             }} catch (e) {{
                 console.error("Erreur injection storage:", e);
             }}
         """
         await page.add_init_script(storage_js)
 
-        print(f"\nNavigation directe vers la page de commande (checkout)...")
-        try:
-            await page.goto(
-                "https://entradas.sevillafc.es/checkout",
-                wait_until="domcontentloaded",
-                timeout=45000
-            )
-        except Exception as e:
-            print(f"Navigation vers /checkout a levé : {e}, repli sur /asientos...")
-            await page.goto(
-                f"https://entradas.sevillafc.es/asientos?evento={event_id}",
-                wait_until="domcontentloaded",
-                timeout=45000
-            )
+        # On ouvre la page du match pour initialiser Angular et le store avec le panier
+        print(f"\nChargement de la page de billetterie...")
+        await page.goto(
+            f"https://entradas.sevillafc.es/asientos?evento={event_id}",
+            wait_until="domcontentloaded",
+            timeout=45000
+        )
 
-        print("\n[OK] Navigateur ouvert avec la session active et le panier injecté.")
-        print("Vérifiez l'écran : vos 2 billets doivent apparaître dans le récapitulatif / panier.")
-        print("Appuyez sur CTRL+C dans ce terminal quand vous aurez terminé votre achat.\n")
+        await page.wait_for_timeout(3000)
+
+        # Vérification si le panier est chargé dans Angular
+        cart_status = await page.evaluate(
+            """
+            async ({token}) => {
+                try {
+                    const res = await fetch('/api/tickets', {
+                        headers: { 'a360session': 'Bearer ' + token }
+                    });
+                    if (!res.ok) return { ok: false, status: res.status };
+                    const cart = await res.json();
+                    return {
+                        ok: true,
+                        cartId: cart.id,
+                        seats: cart.seats ? cart.seats.map(s => `R${s.row}-S${s.seat}`) : [],
+                        expirateIn: cart.expirateIn,
+                        totalPrice: cart.totalPrice
+                    };
+                } catch (err) {
+                    return { ok: false, error: err.message };
+                }
+            }
+            """,
+            {"token": token}
+        )
+
+        print(f"\nÉtat du panier sur le serveur :", cart_status)
+
+        print("\n[OK] Navigateur ouvert et connecté.")
+        print("Si vous êtes sur la page des sièges, le bandeau de votre panier actif apparaît en haut.")
+        print("Cliquez sur 'Continuar' ou sur l'icône Panier pour finaliser.")
+        print("Appuyez sur CTRL+C dans ce terminal pour quitter.\n")
 
         try:
             while True:
