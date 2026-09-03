@@ -1,0 +1,287 @@
+{
+  "timestamp": 1788442070,
+  "proxy": {
+    "host": "84.33.23.2",
+    "port": "60099",
+    "username": "UGAINsexyEUxx",
+    "password": "qqGaeIf9pH"
+  },
+  "token": "3dfa741f-5175-49bb-9904-6127c3dcc610",
+  "storage_state": {
+    "cookies": [
+      {
+        "name": "CloudFront-Key-Pair-Id",
+        "value": "KO8COEXAO3QMP",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Policy",
+        "value": "eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9yZXNvdXJjZXMtY29udGVudGRpc3RyaWJ1dGlvbi4zZGR2YXBpcy5jb20vdjItcmVzb3VyY2VzLWV1LXdlc3QtMS9ldS1lcy0wMDAwNy9kZWZhdWx0L3NldmlsbGEvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4ODQ0MTk0MH19fV19",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Signature",
+        "value": "PNcyO2U6rU1Ez4kH02qmJl6XqFuUVZcerfNWImGfZuSk5OFaVUaDUoS2FuQl7qMq2pCVRf2KciAphCgDTb81RtkEoH6PXF-wcAIfZ3syeXQSZJVRwWC7Nzj0MzjlBwIffmCHOic9k1xTnJgkTWL7VY3gR0a~RJoLWWxGEZZ39wskODePA-BIYSKw48EizAmgtJ4ikVqyxZ0oF-uADRV12gD394g2HYZlZEeqQLycc2tmBWsRHQ69G0NIK111Br4I8qFvveRKrl5HgMmYtgkrBlH8yTldz4uLcLNtaASf~hzY1QsAxkz7ecXrBsHiN8mHx4jrV9DNl4NYbAXrvfm-wg__",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Key-Pair-Id",
+        "value": "KO8COEXAO3QMP",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Policy",
+        "value": "eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9yZXNvdXJjZXMtY29udGVudGRpc3RyaWJ1dGlvbi4zZGR2YXBpcy5jb20vdjItZ2VuZXJpYy1yZXNvdXJjZXMvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4ODQ0MTk0MX19fV19",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Signature",
+        "value": "c~g7c3z1vMRVeTtcmvKwCAHtT2HDYKfrPkEUcxjFP90~8S25aeCbeku0EOq4mIYKds0R8AULDLUjRiJe9EMDnAe3Ko4f9lSG2uNRouusZo4HIegTUTxwzKfl9McfAO9jo8yP9hWT8slea5nh7tlyTuJShRrXBJG8gQqx9ZOP7ReKSUlPTF1telFYGKyq1hsoL1Vy9dE9aZXYDF829EgtLQN~sweiNydDEyRviilYBEdntbgFvvBW3X98EyRdIB0vc450~pRUwmZOOXGv2NJZ0-tyIlalVKbJqCkYdzKcnHyS1xTRcdS6ttEPJ1GaLe06hU-Kq6Yr38TgUHe-hvd1qQ__",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "cookieCheck",
+        "value": "true",
+        "domain": ".3ddvapis.com",
+        "path": "/api/v1/dvm/cookiecheck",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Key-Pair-Id",
+        "value": "KO8COEXAO3QMP",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Policy",
+        "value": "eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9yZXNvdXJjZXMtY29udGVudGRpc3RyaWJ1dGlvbi4zZGR2YXBpcy5jb20vdjItcmVzb3VyY2VzLWV1LXdlc3QtMS9ldS1lcy0wMDAwNy9kZWZhdWx0L3NldmlsbGEvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4ODQ0MTk0MH19fV19",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Signature",
+        "value": "PNcyO2U6rU1Ez4kH02qmJl6XqFuUVZcerfNWImGfZuSk5OFaVUaDUoS2FuQl7qMq2pCVRf2KciAphCgDTb81RtkEoH6PXF-wcAIfZ3syeXQSZJVRwWC7Nzj0MzjlBwIffmCHOic9k1xTnJgkTWL7VY3gR0a~RJoLWWxGEZZ39wskODePA-BIYSKw48EizAmgtJ4ikVqyxZ0oF-uADRV12gD394g2HYZlZEeqQLycc2tmBWsRHQ69G0NIK111Br4I8qFvveRKrl5HgMmYtgkrBlH8yTldz4uLcLNtaASf~hzY1QsAxkz7ecXrBsHiN8mHx4jrV9DNl4NYbAXrvfm-wg__",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-resources-eu-west-1/eu-es-00007/default/sevilla/",
+        "expires": 1788441940.654,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Key-Pair-Id",
+        "value": "KO8COEXAO3QMP",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Policy",
+        "value": "eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9yZXNvdXJjZXMtY29udGVudGRpc3RyaWJ1dGlvbi4zZGR2YXBpcy5jb20vdjItZ2VuZXJpYy1yZXNvdXJjZXMvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4ODQ0MTk0MX19fV19",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "CloudFront-Signature",
+        "value": "c~g7c3z1vMRVeTtcmvKwCAHtT2HDYKfrPkEUcxjFP90~8S25aeCbeku0EOq4mIYKds0R8AULDLUjRiJe9EMDnAe3Ko4f9lSG2uNRouusZo4HIegTUTxwzKfl9McfAO9jo8yP9hWT8slea5nh7tlyTuJShRrXBJG8gQqx9ZOP7ReKSUlPTF1telFYGKyq1hsoL1Vy9dE9aZXYDF829EgtLQN~sweiNydDEyRviilYBEdntbgFvvBW3X98EyRdIB0vc450~pRUwmZOOXGv2NJZ0-tyIlalVKbJqCkYdzKcnHyS1xTRcdS6ttEPJ1GaLe06hU-Kq6Yr38TgUHe-hvd1qQ__",
+        "domain": ".3ddvapis.com",
+        "path": "/v2-generic-resources/",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "cookieCheck",
+        "value": "true",
+        "domain": ".3ddvapis.com",
+        "path": "/api/v1/dvm/cookiecheck",
+        "expires": 1788441941.391,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "m",
+        "value": "f8edbdbf-99ec-4298-8c84-86805c91fde09e9ab1",
+        "domain": "m.stripe.com",
+        "path": "/",
+        "expires": 1823001642.103,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "None"
+      },
+      {
+        "name": "a360_lang",
+        "value": "es",
+        "domain": ".sevillafc.es",
+        "path": "/",
+        "expires": 1796217639,
+        "httpOnly": false,
+        "secure": true,
+        "sameSite": "Lax"
+      },
+      {
+        "name": "OptanonConsent",
+        "value": "isGpcEnabled=0&datestamp=Thu+Sep+03+2026+15%3A20%3A39+GMT%2B0200+(GMT%2B02%3A00)&version=202603.1.0&browserGpcFlag=0&isDntEnabled=0&isIABGlobal=false&consentId=569112ae-c058-4b05-81bc-d3720c66af73&interactionCount=0&isAnonUser=1&prevHadToken=0&landingPath=https%3A%2F%2Fentradas.sevillafc.es%2Fasientos&groups=C0001%3A1%2CC0003%3A0%2CC0004%3A0%2CC0002%3A0%2CV2STACK42%3A0&hosts=H39%3A1%2CH37%3A0%2CH2%3A0%2CH8%3A0%2CH9%3A0%2CH3%3A0%2CH14%3A0%2CH17%3A0%2CH22%3A0%2CH23%3A0%2CH5%3A0%2CH26%3A0%2CH28%3A0%2CH29%3A0%2CH30%3A0%2CH32%3A0%2CH34%3A0%2CH38%3A0&genVendors=",
+        "domain": ".sevillafc.es",
+        "path": "/",
+        "expires": 1819977639,
+        "httpOnly": false,
+        "secure": false,
+        "sameSite": "Lax"
+      },
+      {
+        "name": "__stripe_mid",
+        "value": "506bfdf7-876b-4828-9192-ca8a985e4a36a06df2",
+        "domain": ".entradas.sevillafc.es",
+        "path": "/",
+        "expires": 1819977642,
+        "httpOnly": false,
+        "secure": true,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "__stripe_sid",
+        "value": "404eb751-bc9e-45ab-b4e0-189233af4de23e31c4",
+        "domain": ".entradas.sevillafc.es",
+        "path": "/",
+        "expires": 1788443442,
+        "httpOnly": false,
+        "secure": true,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "io",
+        "value": "zxcgiiiXLI_Xu0bWB-dM",
+        "domain": "entradas.sevillafc.es",
+        "path": "/",
+        "expires": -1,
+        "httpOnly": true,
+        "secure": false,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "AWSALB",
+        "value": "c7VcNF1Hg/BGMzcx9LE+exZW9Po/uQByplYQ7JM9i2yXdPFzuFbBoLNbNob02uIn0Ioh1JQubUzaJkMPI0L5TFQXLDmmF3RuGq1RhZwaO76gqfZOPAKiaHq7RHCK",
+        "domain": "entradas.sevillafc.es",
+        "path": "/",
+        "expires": 1789046655.453,
+        "httpOnly": false,
+        "secure": false,
+        "sameSite": "None"
+      }
+    ],
+    "origins": []
+  },
+  "local_storage": {},
+  "session_storage": {
+    "a360_se_cart_token": "3dfa741f-5175-49bb-9904-6127c3dcc610",
+    "a360session": "3dfa741f-5175-49bb-9904-6127c3dcc610"
+  },
+  "area": {
+    "id": 222,
+    "name": "S22 BAJA SUR",
+    "available": 2,
+    "prices": [
+      {
+        "id": 14,
+        "description": "TRIBUNA BAJA SUR",
+        "price": 150,
+        "junior": false,
+        "partner": false,
+        "sub25": false,
+        "rolls": [],
+        "visitStock": 0
+      }
+    ]
+  },
+  "pair": {
+    "row": "17",
+    "seat1": {
+      "id": 47922,
+      "row": "17",
+      "seat": "368",
+      "posRow": 11,
+      "posSeat": 26,
+      "cx": null,
+      "cy": null,
+      "isCovered": true,
+      "lowVisibility": false,
+      "box": false,
+      "available": true
+    },
+    "seat2": {
+      "id": 47921,
+      "row": "17",
+      "seat": "370",
+      "posRow": 11,
+      "posSeat": 25,
+      "cx": null,
+      "cy": null,
+      "isCovered": true,
+      "lowVisibility": false,
+      "box": false,
+      "available": true
+    }
+  },
+  "book_result": {
+    "ok": false,
+    "status": 500,
+    "data": {
+      "message": "Internal error",
+      "statusCode": 500,
+      "timestamp": "2026-09-03T13:27:47.792Z",
+      "path": "/api/tickets/book"
+    },
+    "raw": "{\"message\":\"Internal error\",\"statusCode\":500,\"timestamp\":\"2026-09-03T13:27:47.792Z\",\"path\":\"/api/tickets/book\"}"
+  }
+}

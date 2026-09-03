@@ -5,37 +5,36 @@ from pathlib import Path
 from camoufox.async_api import AsyncCamoufox
 
 BASE_DIR = Path(__file__).resolve().parent
+RESULTS_DIR = BASE_DIR / "results"
 
 
 async def main():
-    if len(sys.argv) != 2:
-        print("Usage :")
-        print("  python cart.py results/session_001_1788391422.json")
-        return
-
-    target_path = Path(sys.argv[1])
-    if not target_path.is_absolute():
-        target_path = BASE_DIR / target_path
+    if len(sys.argv) == 2:
+        target_path = Path(sys.argv[1])
+        if not target_path.is_absolute():
+            target_path = BASE_DIR / target_path
+    else:
+        target_path = RESULTS_DIR / "latest_cart.json"
 
     if not target_path.exists():
         print(f"[ERREUR] Fichier introuvable : {target_path}")
+        print("Usage :")
+        print("  python cart.py")
+        print("  python cart.py results/cart_XXXXX.json")
         return
 
     with open(target_path, "r", encoding="utf-8") as f:
         file_data = json.load(f)
 
-    # Récupération de la session
+    # Récupération de la session / configuration
     if "session_file" in file_data and Path(file_data["session_file"]).exists():
         with open(file_data["session_file"], "r", encoding="utf-8") as sf:
             session = json.load(sf)
-    elif "storage_state" in file_data:
-        session = file_data
     else:
-        print("[ERREUR] Format de session non reconnu.")
-        return
+        session = file_data
 
-    proxy = session["proxy"]
-    event_id = session.get("event_id", 468)
+    proxy = file_data.get("proxy") or session.get("proxy")
+    event_id = file_data.get("event_id") or session.get("event_id", 468)
     token = file_data.get("token") or session.get("token")
 
     proxy_cfg = {
@@ -45,28 +44,26 @@ async def main():
     }
 
     print("=" * 65)
-    print(f"Restauration de la session : {session['name']}")
-    print(f"Proxy associé : {proxy['host']}:{proxy['port']}")
-    print(f"Token panier  : Bearer {token}")
+    print("OUVERTURE DU PANIER DANS LE NAVIGATEUR")
+    print(f"Fichier   : {target_path.name}")
+    print(f"Proxy     : {proxy['host']}:{proxy['port']}")
+    print(f"Token     : Bearer {token}")
     if "pair" in file_data:
         p = file_data["pair"]
-        print(f"Places : Rang {p['row']} | Sièges {p['seat1']['seat']} & {p['seat2']['seat']}")
+        print(f"Places    : Rang {p['row']} | Sièges {p['seat1']['seat']} & {p['seat2']['seat']}")
     print("=" * 65)
 
-    # ATTENTION : Ne JAMAIS mettre extra_http_headers sur new_context() !
-    # Cela envoie le header a360session aux CDNs tiers (Stripe, OneTrust, Google),
-    # ce qui déclenche des erreurs CORS et bloque le chargement (spinner rouge infini).
     async with AsyncCamoufox(
         headless=False,
         proxy=proxy_cfg,
         geoip=True
     ) as browser:
         context = await browser.new_context(
-            storage_state=session["storage_state"]
+            storage_state=file_data.get("storage_state") or session.get("storage_state")
         )
         page = await context.new_page()
 
-        # On attache a360session UNIQUEMENT sur les appels internes /api/** du club
+        # Routage API propre sans toucher aux scripts tiers
         if token:
             async def on_api_route(route):
                 h = dict(route.request.headers)
@@ -95,24 +92,23 @@ async def main():
                     localStorage.setItem("a360_se_cart_token", "{token}");
                     localStorage.setItem("a360session", "{token}");
                 }}
-                console.log("[INJECTION OK] Token panier restauré dans sessionStorage.");
+                console.log("[INJECTION OK] Token et stockage panier restaurés.");
             }} catch (e) {{
                 console.error("Erreur injection storage:", e);
             }}
         """
         await page.add_init_script(storage_js)
 
-        # On ouvre la page du match pour initialiser Angular et le store avec le panier
-        print(f"\nChargement de la page de billetterie...")
+        print(f"\nChargement de la page de billetterie Sevilla FC...")
         await page.goto(
             f"https://entradas.sevillafc.es/asientos?evento={event_id}",
             wait_until="domcontentloaded",
             timeout=45000
         )
 
-        await page.wait_for_timeout(3000)
+        await page.wait_for_timeout(3500)
 
-        # Vérification si le panier est chargé dans Angular
+        # Inspection de l'état du panier sur le serveur (avec parsing robuste)
         cart_status = await page.evaluate(
             """
             async ({token}) => {
@@ -120,14 +116,24 @@ async def main():
                     const res = await fetch('/api/tickets', {
                         headers: { 'a360session': 'Bearer ' + token }
                     });
-                    if (!res.ok) return { ok: false, status: res.status };
-                    const cart = await res.json();
+                    const text = await res.text();
+                    let parsed = null;
+                    try { parsed = JSON.parse(text); } catch(e) {}
+
+                    if (!res.ok) {
+                        return { ok: false, status: res.status, raw: text };
+                    }
+                    if (!parsed) {
+                        return { ok: false, status: res.status, raw: text, message: 'Réponse vide' };
+                    }
                     return {
                         ok: true,
-                        cartId: cart.id,
-                        seats: cart.seats ? cart.seats.map(s => `R${s.row}-S${s.seat}`) : [],
-                        expirateIn: cart.expirateIn,
-                        totalPrice: cart.totalPrice
+                        status: res.status,
+                        cartId: parsed.id,
+                        seats: parsed.seats ? parsed.seats.map(s => `R${s.row}-S${s.seat}`) : [],
+                        expirateIn: parsed.expirateIn,
+                        totalPrice: parsed.totalPrice,
+                        raw: parsed
                     };
                 } catch (err) {
                     return { ok: false, error: err.message };
@@ -146,12 +152,13 @@ async def main():
             print(f"  ✓ Montant total   : {cart_status.get('totalPrice')} €")
             print(f"  ⏱ Temps restant   : {exp // 60}m {exp % 60:02d}s")
         else:
-            print(f"  ⚠ Attention statut serveur : {cart_status}")
+            print(f"  ⚠ Statut serveur  : HTTP {cart_status.get('status')}")
+            print(f"  ⚠ Détail          : {cart_status.get('raw') or cart_status.get('error')}")
         print("=" * 60)
 
         print("\n[OK] Navigateur ouvert et connecté.")
-        print("-> Le bandeau rouge de votre panier actif apparaît en haut avec vos places.")
-        print("-> Cliquez sur 'Finalizar compra' ou 'Continuar' pour accéder au paiement.")
+        print("-> Vos places sont visibles dans le bandeau de panier en haut.")
+        print("-> Cliquez sur 'Finalizar compra' ou 'Continuar' pour payer.")
         print("-> Appuyez sur CTRL+C dans ce terminal lorsque vous aurez terminé.\n")
 
         try:

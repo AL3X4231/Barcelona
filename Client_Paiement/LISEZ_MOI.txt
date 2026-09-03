@@ -1,0 +1,35 @@
+======================================================================
+         GUIDE D'UTILISATION RAPIDE - ASSISTANT PANIER 1-CLIC
+======================================================================
+
+Ce dossier permet d'ouvrir immédiatement le panier réservé par le bot
+sur votre écran, avec les 2 places et le bon proxy, pour payer.
+
+----------------------------------------------------------------------
+ÉTAPE 1 : PREMIÈRE UTILISATION (À faire une seule fois)
+----------------------------------------------------------------------
+1. Assurez-vous que Python est installé sur votre PC (python.org).
+   (En cochant bien "Add python.exe to PATH" lors de l'installation).
+2. Double-cliquez sur "INSTALLER.bat" et attendez qu'il se termine.
+
+----------------------------------------------------------------------
+ÉTAPE 2 : OUVRIR LE PANIER ET PAYER
+----------------------------------------------------------------------
+Dès que vous recevez une notification Discord vous informant qu'un
+panier a été réservé :
+
+1. Double-cliquez sur "OUVRIR_PANIER.bat".
+2. Une fenêtre s'affiche avec le statut en vert :
+   "🟢 PANIER ACTIF : 2 BILLETS CÔTE À CÔTE VERROUILLÉS"
+3. Cliquez sur le gros bouton vert :
+   [ 🎟️ OUVRIR LE PANIER ET PAYER ]
+4. Le navigateur s'ouvre automatiquement avec vos 2 places réservées.
+5. Cliquez sur "Finalizar compra" / "Continuar" et payez par carte.
+
+----------------------------------------------------------------------
+ASTUCE DE SECOURS (Si vous n'avez pas de connexion au tunnel) :
+----------------------------------------------------------------------
+Téléchargez simplement le fichier "latest_cart.json" qui est attaché
+dans le message Discord, et déposez-le dans ce dossier.
+Le bouton s'allumera automatiquement en vert !
+======================================================================

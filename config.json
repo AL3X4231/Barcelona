@@ -3,9 +3,9 @@
   "poll_interval": 1.5,
   "pair_gap": 2,
   "auto_book": true,
-  "max_sessions_to_create": 5,
-  "session_dir": "sessions",
+  "session_refresh_interval": 600,
   "results_dir": "results",
   "headless": true,
-  "discord_webhook": "https://discord.com/api/webhooks/1480234452910342305/aHgTOzqJKgU1KSo48qdwmHvQrXng51fwFhvf2VtYFvTa7NNEhqdZ78ULbDskNuETeRFu"
+  "discord_webhook": "https://discord.com/api/webhooks/1480234452910342305/aHgTOzqJKgU1KSo48qdwmHvQrXng51fwFhvf2VtYFvTa7NNEhqdZ78ULbDskNuETeRFu",
+  "relay_topic": "sevilla_barca_cart_al3x"
 }
