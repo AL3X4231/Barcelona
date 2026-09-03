@@ -188,8 +188,9 @@ async def scan_session(session_file, config):
                             prices = area.get("prices", [])
                             valid_prices = [p for p in prices if not p.get("junior")]
                             price_id = valid_prices[0]["id"] if valid_prices else (prices[0]["id"] if prices else 1)
+                            unit_price = valid_prices[0].get("price", "?") if valid_prices else "?"
 
-                            print(f"[{session_name}] Ajout au panier immédiat (idPrice: {price_id})...")
+                            print(f"[{session_name}] Verrouillage immédiat des 2 places via /api/tickets/book (tarif: {unit_price}€)...")
                             book_result = await page.evaluate(
                                 """
                                 async ({eventId, areaId, priceId, token}) => {
@@ -214,7 +215,16 @@ async def scan_session(session_file, config):
                                 """,
                                 {"eventId": event_id, "areaId": area["id"], "priceId": price_id, "token": token}
                             )
-                            print(f"[{session_name}] Résultat panier :", book_result)
+
+                            if book_result.get("ok"):
+                                cdata = book_result.get("data", {})
+                                exp_sec = cdata.get("expirateIn", 540)
+                                print(f"[{session_name}] ✓ RÉSERVATION CONFIRMÉE PAR LE SERVEUR (HTTP 201) !")
+                                print(f"    ID Panier  : {cdata.get('id')}")
+                                print(f"    Prix Total : {cdata.get('totalPrice')} €")
+                                print(f"    Timer      : {exp_sec // 60}m {exp_sec % 60:02d}s")
+                            else:
+                                print(f"[{session_name}] ✗ Échec réservation :", book_result)
 
                         # Capture des cookies frais et du sessionStorage / localStorage après le panier
                         try:
@@ -227,7 +237,19 @@ async def scan_session(session_file, config):
                             local_storage = {}
                             session_storage = {}
 
-                        await save_result(session, session_file, area, pair, book_result, fresh_storage, local_storage, session_storage)
+                        if token:
+                            session_storage["a360_se_cart_token"] = token
+                            session_storage["a360session"] = token
+
+                        out_path = await save_result(session, session_file, area, pair, book_result, fresh_storage, local_storage, session_storage)
+
+                        print("\n" + "=" * 70)
+                        print("🎉 PAIRE SÉCURISÉE DANS LE PANIER !")
+                        print(f"Zone   : {area.get('name')} (ID {area.get('id')})")
+                        print(f"Places : Rang {pair['row']} | Sièges {pair['seat1']['seat']} & {pair['seat2']['seat']}")
+                        print(f"\n👉 LANCEZ CETTE COMMANDE DANS UN NOUVEAU TERMINAL POUR PAYER :")
+                        print(f"   python cart.py results/{out_path.name}")
+                        print("=" * 70 + "\n")
                         return True
 
                 elapsed = time.monotonic() - t0
@@ -264,10 +286,11 @@ async def save_result(session, session_file, area, pair, book_result=None, fresh
         },
         "book_result": book_result
     }
-    filename = RESULTS_DIR / f"{session['name']}_{ts}.json"
-    with open(filename, "w", encoding="utf-8") as f:
+    out_file = RESULTS_DIR / f"{session['name']}_{ts}.json"
+    with open(out_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"Résultat sauvegardé -> {filename.name}")
+    print(f"Résultat sauvegardé -> {out_file.name}")
+    return out_file
 
 
 async def main():

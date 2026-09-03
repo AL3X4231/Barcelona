@@ -137,12 +137,22 @@ async def main():
             {"token": token}
         )
 
-        print(f"\nÉtat du panier sur le serveur :", cart_status)
+        print("\n" + "=" * 60)
+        print("ÉTAT DU PANIER SUR LE SERVEUR :")
+        if cart_status.get("ok"):
+            exp = cart_status.get("expirateIn", 0)
+            print(f"  ✓ Panier actif    : {cart_status.get('cartId')}")
+            print(f"  ✓ Sièges réservés : {', '.join(cart_status.get('seats', []))}")
+            print(f"  ✓ Montant total   : {cart_status.get('totalPrice')} €")
+            print(f"  ⏱ Temps restant   : {exp // 60}m {exp % 60:02d}s")
+        else:
+            print(f"  ⚠ Attention statut serveur : {cart_status}")
+        print("=" * 60)
 
         print("\n[OK] Navigateur ouvert et connecté.")
-        print("Si vous êtes sur la page des sièges, le bandeau de votre panier actif apparaît en haut.")
-        print("Cliquez sur 'Continuar' ou sur l'icône Panier pour finaliser.")
-        print("Appuyez sur CTRL+C dans ce terminal pour quitter.\n")
+        print("-> Le bandeau rouge de votre panier actif apparaît en haut avec vos places.")
+        print("-> Cliquez sur 'Finalizar compra' ou 'Continuar' pour accéder au paiement.")
+        print("-> Appuyez sur CTRL+C dans ce terminal lorsque vous aurez terminé.\n")
 
         try:
             while True:
