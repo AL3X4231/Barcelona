@@ -6,5 +6,6 @@
   "max_sessions_to_create": 5,
   "session_dir": "sessions",
   "results_dir": "results",
-  "headless": true
+  "headless": true,
+  "discord_webhook": "https://discord.com/api/webhooks/1480234452910342305/aHgTOzqJKgU1KSo48qdwmHvQrXng51fwFhvf2VtYFvTa7NNEhqdZ78ULbDskNuETeRFu"
 }

@@ -1,8 +1,17 @@
 import asyncio
 import json
+import sys
 import time
+import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 from camoufox.async_api import AsyncCamoufox
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 BASE_DIR = Path(__file__).resolve().parent
 CONFIG_FILE = BASE_DIR / "config.json"
@@ -17,6 +26,98 @@ def load_config():
 
 def load_sessions():
     return sorted(SESSION_DIR.glob("session_*.json"))
+
+
+def _post_discord_sync(webhook_url, payload):
+    req = urllib.request.Request(
+        webhook_url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent": "SevillaFC-Monitor/1.0"
+        },
+        method="POST"
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return resp.status
+
+
+async def notify_discord(webhook_url, session_name, area, pair, book_result, out_path):
+    if not webhook_url:
+        return
+
+    try:
+        cdata = book_result.get("data", {}) if book_result else {}
+        cart_id = cdata.get("id", "Non réservé")
+        total_price = cdata.get("totalPrice", "N/A")
+        exp_sec = cdata.get("expirateIn", 540)
+        minutes = exp_sec // 60
+        seconds = exp_sec % 60
+
+        area_name = area.get("name", "Zone inconnue")
+        area_id = area.get("id", "")
+        row = pair["row"]
+        seat1 = pair["seat1"]["seat"]
+        seat2 = pair["seat2"]["seat"]
+
+        cart_command = f"python cart.py results/{out_path.name}"
+
+        embed = {
+            "title": "⚽ SEVILLA FC - FC BARCELONA",
+            "description": "🚨 **Une paire de billets côte à côte a été verrouillée dans votre panier !**",
+            "color": 3066993,  # Vert
+            "fields": [
+                {
+                    "name": "🏟️ Zone / Tribune",
+                    "value": f"**{area_name}** (ID {area_id})",
+                    "inline": True
+                },
+                {
+                    "name": "💺 Places côte à côte",
+                    "value": f"Rang **{row}** | Sièges **{seat1}** & **{seat2}**",
+                    "inline": True
+                },
+                {
+                    "name": "💶 Montant Total",
+                    "value": f"**{total_price} €**",
+                    "inline": True
+                },
+                {
+                    "name": "🛒 ID Panier",
+                    "value": f"`{cart_id}`",
+                    "inline": True
+                },
+                {
+                    "name": "⏱️ Temps restant",
+                    "value": f"**{minutes}m {seconds:02d}s**",
+                    "inline": True
+                },
+                {
+                    "name": "👤 Session",
+                    "value": f"`{session_name}`",
+                    "inline": True
+                },
+                {
+                    "name": "⚡ Commande à exécuter pour payer",
+                    "value": f"```bash\n{cart_command}\n```",
+                    "inline": False
+                }
+            ],
+            "footer": {
+                "text": "Sevilla FC Bot • Ouvrez rapidement le panier pour finaliser l'achat !"
+            },
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+
+        payload = {
+            "content": f"@everyone 🎟️ **BILLETS VERROUILLÉS DANS LE PANIER ! ({seat1} & {seat2})**",
+            "embeds": [embed]
+        }
+
+        status = await asyncio.to_thread(_post_discord_sync, webhook_url, payload)
+        print(f"[{session_name}] ✓ Alerte Discord envoyée avec succès (HTTP {status}) !")
+    except Exception as e:
+        print(f"[{session_name}] ⚠ Erreur envoi Discord : {e}")
 
 
 def find_pair(seats, gap=2):
@@ -242,6 +343,10 @@ async def scan_session(session_file, config):
                             session_storage["a360session"] = token
 
                         out_path = await save_result(session, session_file, area, pair, book_result, fresh_storage, local_storage, session_storage)
+
+                        discord_webhook = config.get("discord_webhook")
+                        if discord_webhook:
+                            await notify_discord(discord_webhook, session_name, area, pair, book_result, out_path)
 
                         print("\n" + "=" * 70)
                         print("🎉 PAIRE SÉCURISÉE DANS LE PANIER !")
